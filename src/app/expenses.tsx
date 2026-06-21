@@ -14,7 +14,9 @@ import { Expense } from "@/types/expense";
 import { Picker } from "@react-native-picker/picker";
 
 export default function ExpensesScreen() {
-  const { expenses, addExpense, deleteExpense } = useExpenses();
+  const { expenses, addExpense, deleteExpense, updateExpense } = useExpenses();
+
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Food");
@@ -34,11 +36,30 @@ export default function ExpensesScreen() {
 
     setAmount("");
     setDescription("");
+    setCategory("Food");
+  };
+
+  const handleSaveExpense = () => {
+    if (!amount || !description || !editingId) return;
+
+    updateExpense({
+      id: editingId,
+      amount: Number(amount),
+      description,
+      category,
+      date: new Date().toISOString(),
+    });
+
+    setAmount("");
+    setDescription("");
+    setCategory("Food");
+    setEditingId(null);
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Expenses</Text>
+
       <TextInput
         placeholder="Amount"
         value={amount}
@@ -53,6 +74,7 @@ export default function ExpensesScreen() {
         onChangeText={setDescription}
         style={styles.input}
       />
+
       <Picker
         selectedValue={category}
         onValueChange={(itemValue) => setCategory(itemValue)}
@@ -65,8 +87,14 @@ export default function ExpensesScreen() {
         <Picker.Item label="Health" value="Health" />
         <Picker.Item label="Other" value="Other" />
       </Picker>
-      <TouchableOpacity style={styles.button} onPress={handleAddExpense}>
-        <Text style={styles.buttonText}>+ Add Expense</Text>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={editingId ? handleSaveExpense : handleAddExpense}
+      >
+        <Text style={styles.buttonText}>
+          {editingId ? "💾 Save Changes" : "+ Add Expense"}
+        </Text>
       </TouchableOpacity>
 
       <FlatList
@@ -75,6 +103,12 @@ export default function ExpensesScreen() {
         ListEmptyComponent={<Text style={styles.empty}>No expenses yet</Text>}
         renderItem={({ item }) => (
           <TouchableOpacity
+            onPress={() => {
+              setEditingId(item.id);
+              setAmount(item.amount.toString());
+              setDescription(item.description);
+              setCategory(item.category);
+            }}
             onLongPress={() =>
               Alert.alert("Delete Expense", `Delete ${item.description}?`, [
                 {
@@ -111,18 +145,18 @@ const styles = StyleSheet.create({
     padding: 20,
   },
 
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+
   input: {
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 10,
     padding: 12,
     marginBottom: 10,
-  },
-
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 20,
   },
 
   button: {
