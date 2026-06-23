@@ -54,6 +54,15 @@ export default function AppTabs() {
           <TabTrigger name="profile" href="/profile" asChild>
             <TabButton>Profile</TabButton>
           </TabTrigger>
+          <TabTrigger name="achievements" href={"/achievements" as never} asChild>
+            <TabButton>Achievements</TabButton>
+          </TabTrigger>
+          <TabTrigger name="settings" href={"/settings" as never} asChild>
+            <TabButton>Settings</TabButton>
+          </TabTrigger>
+          <TabTrigger name="auth" href={"/auth" as never} asChild>
+            <TabButton>Account</TabButton>
+          </TabTrigger>
         </CustomTabList>
       </TabList>
     </Tabs>

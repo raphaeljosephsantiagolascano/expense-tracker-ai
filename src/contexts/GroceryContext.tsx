@@ -9,6 +9,7 @@ type GroceryContextType = {
   updateGroceryItem: (item: GroceryItem) => void;
   deleteGroceryItem: (id: string) => void;
   togglePurchased: (id: string) => void;
+  replaceGroceryItems: (items: GroceryItem[]) => void;
 };
 
 const GroceryContext = createContext<GroceryContextType | undefined>(undefined);
@@ -66,6 +67,10 @@ export function GroceryProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const replaceGroceryItems = (items: GroceryItem[]) => {
+    setGroceryItems(items);
+  };
+
   return (
     <GroceryContext.Provider
       value={{
@@ -74,6 +79,7 @@ export function GroceryProvider({ children }: { children: React.ReactNode }) {
         updateGroceryItem,
         deleteGroceryItem,
         togglePurchased,
+        replaceGroceryItems,
       }}
     >
       {children}

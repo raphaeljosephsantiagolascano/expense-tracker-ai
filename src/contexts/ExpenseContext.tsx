@@ -7,6 +7,7 @@ type ExpenseContextType = {
   addExpense: (expense: Expense) => void;
   deleteExpense: (id: string) => void;
   updateExpense: (expense: Expense) => void;
+  replaceExpenses: (expenses: Expense[]) => void;
 };
 
 const ExpenseContext = createContext<ExpenseContextType | undefined>(undefined);
@@ -60,6 +61,10 @@ export function ExpenseProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const replaceExpenses = (nextExpenses: Expense[]) => {
+    setExpenses(nextExpenses);
+  };
+
   return (
     <ExpenseContext.Provider
       value={{
@@ -67,6 +72,7 @@ export function ExpenseProvider({ children }: { children: React.ReactNode }) {
         addExpense,
         deleteExpense,
         updateExpense,
+        replaceExpenses,
       }}
     >
       {children}

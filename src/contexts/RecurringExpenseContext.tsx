@@ -7,6 +7,7 @@ type RecurringExpenseContextType = {
   recurringExpenses: RecurringExpense[];
   addRecurringExpense: (expense: RecurringExpense) => void;
   deleteRecurringExpense: (id: string) => void;
+  replaceRecurringExpenses: (expenses: RecurringExpense[]) => void;
 };
 
 const RecurringExpenseContext = createContext<
@@ -61,12 +62,17 @@ export function RecurringExpenseProvider({
     setRecurringExpenses((prev) => prev.filter((expense) => expense.id !== id));
   };
 
+  const replaceRecurringExpenses = (expenses: RecurringExpense[]) => {
+    setRecurringExpenses(expenses);
+  };
+
   return (
     <RecurringExpenseContext.Provider
       value={{
         recurringExpenses,
         addRecurringExpense,
         deleteRecurringExpense,
+        replaceRecurringExpenses,
       }}
     >
       {children}

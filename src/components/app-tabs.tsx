@@ -91,6 +91,18 @@ export default function AppTabs() {
           renderingMode="template"
         />
       </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="achievements">
+        <NativeTabs.Trigger.Label>Achievements</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf="star.fill" drawable="ic_menu_upload" />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="settings">
+        <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf="gearshape.fill" drawable="ic_menu_manage" />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="auth">
+        <NativeTabs.Trigger.Label>Account</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf="person.crop.circle" drawable="ic_menu_myplaces" />
+      </NativeTabs.Trigger>
     </NativeTabs>
   );
 }

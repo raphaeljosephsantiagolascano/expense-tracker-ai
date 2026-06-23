@@ -7,6 +7,7 @@ type SavingsGoalContextType = {
   goals: SavingsGoal[];
   addGoal: (goal: SavingsGoal) => void;
   deleteGoal: (id: string) => void;
+  replaceGoals: (goals: SavingsGoal[]) => void;
 };
 
 const SavingsGoalContext = createContext<SavingsGoalContextType | undefined>(
@@ -56,12 +57,17 @@ export function SavingsGoalProvider({
     setGoals((prev) => prev.filter((goal) => goal.id !== id));
   };
 
+  const replaceGoals = (nextGoals: SavingsGoal[]) => {
+    setGoals(nextGoals);
+  };
+
   return (
     <SavingsGoalContext.Provider
       value={{
         goals,
         addGoal,
         deleteGoal,
+        replaceGoals,
       }}
     >
       {children}

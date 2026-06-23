@@ -11,6 +11,7 @@ import { calculateForecast } from "@/services/forecastService";
 import { getPiperMessage } from "@/services/insightService";
 import { getPiperMood } from "@/services/moodService";
 import { calculateTrackingStreak } from "@/services/streakService";
+import { calculateTreeProgress } from "@/services/treeProgressService";
 
 export default function HomeScreen() {
   const { expenses } = useExpenses();
@@ -24,6 +25,13 @@ export default function HomeScreen() {
   const remaining = budget - totalSpent;
   const mood = getPiperMood(totalSpent, budget);
   const message = getPiperMessage(mood);
+  const treeProgress = calculateTreeProgress({
+    expenseStreak: trackingStreak,
+    goals,
+    budget,
+    totalSpent,
+    expenses,
+  });
 
   return (
     <View style={styles.container}>
@@ -129,6 +137,14 @@ export default function HomeScreen() {
       <View style={styles.card}>
         <Text style={styles.label}>Tracking Streak</Text>
         <Text style={styles.value}>🔥 {trackingStreak} day(s)</Text>
+      </View>
+
+      <View style={styles.card}>
+        <Text style={styles.label}>Money Tree</Text>
+        <Text style={styles.value}>
+          Level {treeProgress.level}: {treeProgress.label}
+        </Text>
+        <Text>Next level: {treeProgress.progressToNextLevel}%</Text>
       </View>
     </View>
   );

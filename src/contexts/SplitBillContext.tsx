@@ -7,6 +7,7 @@ type SplitBillContextType = {
   splitBills: SplitBill[];
   addSplitBill: (bill: SplitBill) => void;
   deleteSplitBill: (id: string) => void;
+  replaceSplitBills: (bills: SplitBill[]) => void;
 };
 
 const SplitBillContext = createContext<SplitBillContextType | undefined>(
@@ -52,12 +53,17 @@ export function SplitBillProvider({ children }: { children: React.ReactNode }) {
     setSplitBills((prev) => prev.filter((bill) => bill.id !== id));
   };
 
+  const replaceSplitBills = (bills: SplitBill[]) => {
+    setSplitBills(bills);
+  };
+
   return (
     <SplitBillContext.Provider
       value={{
         splitBills,
         addSplitBill,
         deleteSplitBill,
+        replaceSplitBills,
       }}
     >
       {children}
