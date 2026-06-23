@@ -10,6 +10,7 @@ import {
 } from "react-native";
 
 import { useExpenses } from "@/contexts/ExpenseContext";
+import { parseExpenseText } from "@/services/parserService";
 import { Expense } from "@/types/expense";
 import { Picker } from "@react-native-picker/picker";
 
@@ -20,13 +21,18 @@ export default function ExpensesScreen() {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Food");
-
+  const [quickInput, setQuickInput] = useState("");
   const handleAddExpense = () => {
-    if (!amount || !description) return;
+    const parsedAmount = Number(amount);
+
+    if (!description || !Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+      Alert.alert("Invalid Expense", "Enter a description and a positive amount.");
+      return;
+    }
 
     const newExpense: Expense = {
       id: Date.now().toString(),
-      amount: Number(amount),
+      amount: parsedAmount,
       category,
       description,
       date: new Date().toISOString(),
@@ -40,11 +46,21 @@ export default function ExpensesScreen() {
   };
 
   const handleSaveExpense = () => {
-    if (!amount || !description || !editingId) return;
+    const parsedAmount = Number(amount);
+
+    if (
+      !description ||
+      !editingId ||
+      !Number.isFinite(parsedAmount) ||
+      parsedAmount <= 0
+    ) {
+      Alert.alert("Invalid Expense", "Enter a description and a positive amount.");
+      return;
+    }
 
     updateExpense({
       id: editingId,
-      amount: Number(amount),
+      amount: parsedAmount,
       description,
       category,
       date: new Date().toISOString(),
@@ -55,11 +71,36 @@ export default function ExpensesScreen() {
     setCategory("Food");
     setEditingId(null);
   };
+  const handleQuickParse = () => {
+    const parsed = parseExpenseText(quickInput);
 
+    if (!parsed) {
+      Alert.alert("Invalid Input", "Try: Spent 250 on Jollibee");
+      return;
+    }
+
+    setAmount(parsed.amount.toString());
+    setDescription(parsed.description);
+    setCategory(parsed.category);
+
+    setQuickInput("");
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Expenses</Text>
 
+      <Text style={styles.quickTitle}>✨ Quick Add</Text>
+
+      <TextInput
+        placeholder="Spent 250 on Jollibee"
+        value={quickInput}
+        onChangeText={setQuickInput}
+        style={styles.input}
+      />
+
+      <TouchableOpacity style={styles.button} onPress={handleQuickParse}>
+        <Text style={styles.buttonText}>Parse Expense</Text>
+      </TouchableOpacity>
       <TextInput
         placeholder="Amount"
         value={amount}
@@ -201,5 +242,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#f2f2f2",
     marginBottom: 10,
+  },
+  quickTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 8,
   },
 });
