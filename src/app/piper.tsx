@@ -49,6 +49,7 @@ export default function PiperScreen() {
     "Show my groceries",
     "How much are my groceries?",
     "Can I afford my groceries?",
+    "What groceries are not purchased yet?",
     "Can I afford 5000?",
     "Show my split bills",
   ];

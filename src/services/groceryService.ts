@@ -34,8 +34,27 @@ export function summarizeGroceries(items: GroceryItem[]): string {
     .map((item) => {
       const status = item.purchased ? "purchased" : "pending";
       const total = item.quantity * item.estimatedPrice;
+      const category = item.category ? `, ${item.category}` : "";
 
-      return `${item.name} x${item.quantity}: ₱${total.toFixed(2)} (${status})`;
+      return `${item.name} x${item.quantity}: ₱${total.toFixed(
+        2,
+      )} (${status}${category})`;
+    })
+    .join("\n");
+}
+
+export function summarizeUnpurchasedGroceries(items: GroceryItem[]): string {
+  const pendingItems = items.filter((item) => !item.purchased);
+
+  if (pendingItems.length === 0) {
+    return "All grocery items are marked as purchased.";
+  }
+
+  return pendingItems
+    .map((item) => {
+      const total = item.quantity * item.estimatedPrice;
+
+      return `${item.name} x${item.quantity}: ₱${total.toFixed(2)}`;
     })
     .join("\n");
 }

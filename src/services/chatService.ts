@@ -10,6 +10,7 @@ import {
 import {
   calculateGroceryBudgetImpact,
   summarizeGroceries,
+  summarizeUnpurchasedGroceries,
 } from "./groceryService";
 import { getInsights } from "./insightService";
 import { summarizeSplitBills } from "./splitBillService";
@@ -34,6 +35,14 @@ export function getPiperResponse(
 
   if (lower.includes("show my groceries") || lower.includes("grocery list")) {
     return summarizeGroceries(groceries);
+  }
+
+  if (
+    lower.includes("not purchased") ||
+    lower.includes("unpurchased groceries") ||
+    lower.includes("pending groceries")
+  ) {
+    return summarizeUnpurchasedGroceries(groceries);
   }
 
   if (
